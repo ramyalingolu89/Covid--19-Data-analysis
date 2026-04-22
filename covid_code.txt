@@ -1,0 +1,49 @@
+#1.Importing Libraries and Loading Data
+
+import pandas as pd
+import matplotlib.pyplot as plt
+df = pd.read_csv("covid_data.csv")
+print(df.head())
+print(df.info())
+print(df.describe())
+print(df.isna().sum())
+
+#2.Top 10 countries by confirmed cases
+
+
+top10 = df.sort_values(by="Confirmed", ascending=False).head(10)
+plt.figure()
+plt.bar(top10["Country/Region"], top10["Confirmed"])
+plt.title("Top 10 Countries by Confirmed Cases")
+plt.xticks(rotation=45)
+plt.show()
+
+#3.Death and Recoveries
+
+plt.figure()
+plt.bar(top10["Country/Region"], top10["Deaths"], label="Deaths")
+plt.bar(top10["Country/Region"], top10["Recovered"], bottom=top10["Deaths"], label="Recovered")
+plt.title("Deaths and Recoveries")
+plt.legend()
+plt.xticks(rotation=45)
+plt.show()
+
+#4.Trend Line
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+df_sorted = df.sort_values(by="Confirmed")
+y = df_sorted["Confirmed"].values
+x = np.arange(len(y))
+z = np.polyfit(x, y, 1)
+trend = np.poly1d(z)
+plt.figure(figsize=(10,5))
+plt.plot(x, y, label="Confirmed Cases", linewidth=2)
+plt.plot(x, trend(x), linestyle="--", label="Trend Line")
+plt.title("Trend of Confirmed COVID-19 Cases Across Countries")
+plt.xlabel("Countries (sorted by cases)")
+plt.ylabel("Number of Confirmed Cases")
+plt.legend()
+plt.grid(True)
+plt.show()
